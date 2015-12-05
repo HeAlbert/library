@@ -55,7 +55,7 @@
     </form>
     
     <!-- search result table -->
-   <form class="searchbar">
+   <form class="searchbar" action="/library/transaction/home" method="post">
    <div style="height:740px;">
   	<label>Search Result</label>
   	<table class="stable">

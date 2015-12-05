@@ -26,7 +26,7 @@
     <table class="searchtable">
     <tr  class="str">
     	<td >Item Title</td>
-        <td ><input type="text" name="title" /></td>
+        <td ><input type="text" name="title" value=${searchinput } /></td>
     </tr>
      <tr>
     	<td>ItemType</td>
@@ -58,7 +58,10 @@
       </table>
     </form>
     
-   <form class="searchbar">
+    <label>${loginuser.userId} : ${loginuser.userName}   ${loginuser.onloanNumber}items on loan</label>
+    <label style="color:red;"> ${message}</label>
+    
+   <form class="searchbar" action="/library/transaction/stuborrow" method="post">
    <div style="height:740px;">
   	<label>Search Result</label>
   	<table class="stable">
@@ -101,6 +104,7 @@
         </c:forEach> 
     </table>
     </div>
+    <label style="color:red;"> ${message}</label>
     <button type="submit" >Borrow</button>
     </form>
  	

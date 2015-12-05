@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
@@ -17,9 +18,13 @@ import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.websocket.Session;
 
 import org.apache.catalina.connector.Request;
+import org.apache.tomcat.dbcp.pool2.impl.GenericKeyedObjectPool;
 
+import biz.ItemsManager;
 import biz.TransactionManager;
+import biz.UserManager;
 import dao.tfactory;
+import dto.Items;
 import dto.Transcation;
 import dto.User;
 
@@ -58,9 +63,11 @@ public class TransactionControl extends HttpServlet {
 		String path = request.getPathInfo();
 		HttpSession session;
 		User loguser;
+		ItemsManager IM=new ItemsManager();
 		int transactionID;
 		System.out.println("PATH is" + path);
 		TransactionManager TM=new TransactionManager();
+		UserManager UM=new UserManager();
 		RequestDispatcher rd = null;
 		switch (path) {
 		case "/viewtransactionlib":
@@ -251,6 +258,104 @@ public class TransactionControl extends HttpServlet {
 			catch (Exception e) {
 				// TODO: handle exception
 			}
+			break;
+		case "/stuborrow":
+			session=request.getSession();
+			loguser=(User)session.getAttribute("loginuser"); 
+			String[] borrow=request.getParameterValues("borrow");
+			if(loguser.getOnloanNumber()+borrow.length<=10)
+			{
+				ArrayList<Items> list=new ArrayList<Items>();
+				for(int i=0;i<borrow.length;i++)
+				{
+					list.add(IM.getOneItems( Integer.parseInt(borrow[i])));					
+				}				
+				request.setAttribute("sblist", list);
+				session.setAttribute("user", loguser);
+				session.setAttribute("usertype", "student");
+				rd = request.getRequestDispatcher("../jsp/borrowcomfirm.jsp");
+				rd.forward(request, response);	
+			}
+			else{
+				request.setAttribute("message", "Cannot borrow over 10 items!!!");
+				rd = request.getRequestDispatcher("../jsp/stusearch.jsp");
+				rd.forward(request, response);	
+			}
+			
+			break;
+		case "/finalborrow":
+			session=request.getSession();
+			User borrower=(User)session.getAttribute("user");
+			String[] itemid=request.getParameterValues("confirm");
+			Date now=new Date(System.currentTimeMillis());
+			Calendar calendar=Calendar.getInstance();
+			calendar.add(Calendar.DATE, 30);
+			long b=calendar.getTimeInMillis();
+			Date due=new Date(b);
+			Transcation t=new Transcation();
+			try{ 
+				for(int i=0;i<itemid.length;i++){
+					t.setUerID(borrower.getUserId()); 
+					t.setIteamID(Integer.parseInt(itemid[i]));
+					t.setLoanDate(now);
+					t.setDueDate(due);
+					TM.insertTransaction(t);}
+			}
+					
+			
+			catch (Exception e) {
+				// TODO: handle exception
+			}
+			String type=(String)session.getAttribute("usertype");
+			if (type=="student") {
+				rd = request.getRequestDispatcher("../jsp/stusearch.jsp");	
+			}
+			else if(type=="library"){
+				rd = request.getRequestDispatcher("../jsp/libsearch.jsp");
+			}
+			else {
+				rd = request.getRequestDispatcher("../jsp/login.jsp");
+			}
+			session.setAttribute("usertype", null);
+			session.setAttribute("user", null);
+			rd.forward(request, response);
+			break;
+		case "/libborrow":
+			session=request.getSession();
+			User student=new User();
+			student=UM.getOneUser(request.getParameter("sdutentID"));
+			if(student.getUserName()!=null){
+				String[] lborrow=request.getParameterValues("borrow");
+				session.setAttribute("user", student);
+				 if(student.getOnloanNumber()+lborrow.length<=10)
+				{
+					ArrayList<Items> list=new ArrayList<Items>();
+					for(int i=0;i<lborrow.length;i++)
+					{
+						list.add(IM.getOneItems( Integer.parseInt(lborrow[i])));					
+					}				
+					request.setAttribute("sblist", list);
+					
+					session.setAttribute("usertype", "library");
+					rd = request.getRequestDispatcher("../jsp/borrowcomfirm.jsp");
+					rd.forward(request, response);	
+				}
+				else{
+					request.setAttribute("message", "Cannot borrow over 10 items!!!");
+					rd = request.getRequestDispatcher("../jsp/libsearch.jsp");
+					rd.forward(request, response);	
+				}
+			}
+			else {
+				request.setAttribute("message", "Wrong student ID!!");
+				rd = request.getRequestDispatcher("../jsp/libsearch.jsp");
+				rd.forward(request, response);	
+			}
+					
+			break;
+		case"/home":
+			rd = request.getRequestDispatcher("../jsp/login.jsp");
+			rd.forward(request, response);	
 		}
 	}	
 }

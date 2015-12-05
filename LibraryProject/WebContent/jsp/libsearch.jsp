@@ -27,7 +27,7 @@
     <table class="searchtable">
     <tr  class="str">
     	<td >Item Title</td>
-        <td ><input type="text" name="title" /></td>
+        <td ><input type="text" name="title" value=${searchinput}/></td>
     </tr>
      <tr>
     	<td>ItemType</td>
@@ -57,9 +57,11 @@
     	<td colspan="3" ><button type="submit">Search</button></td>
     </tr>
       </table>
-    </form>
-    
-   <form class="searchbar">
+      </form>
+	<label>${user.userId} : ${user.userName}   ${user.onloanNumber}items on loan</label>
+    <label style="color:red;"> ${message}</label>
+      
+   <form action="/library/transaction/libborrow" method="post">
    <div style="height:740px;">
   	<label>Search Result</label>
   	<table class="stable">
@@ -71,7 +73,7 @@
             <th>Status</th>
             <th>Borrow</th> 
         </tr>
-        
+     
         <c:forEach items="${itmlist}" var="items" varStatus="i">
 			<tr>
 				<td>${i.index+1}</td>
@@ -100,13 +102,20 @@
 				</c:choose>
         	</tr>        
         </c:forEach> 
+        
     </table>
     </div>
-    <button type="submit" >Borrow</button>
+    <label style="color:red;"> ${message}</label>
+    <label> Input student ID: <input type="text" name="sdutentID" > </label>
+    <button type="submit" >Borrow</button>   
     </form>
+
+    </div>
+    </div>
+    
  	
-  </div>
-  </div>
+  
+  
   <div class="footer">
     <p>People Who Like Books, Like Sun Rise In the World.</p>
     <p>Sun Rise Library</p>

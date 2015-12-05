@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 
 import biz.ItemsManager;
 import dto.Items;
@@ -40,7 +41,9 @@ public class ItemsController extends HttpServlet {
 
 	private void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String path = request.getPathInfo();
+		System.out.println("go1");
 		System.out.println("PATH is" + path);
+		HttpSession session;
 		
 		ItemsManager mgr = new ItemsManager();
 		RequestDispatcher rd = null;
@@ -55,11 +58,12 @@ public class ItemsController extends HttpServlet {
 			rd.forward(request, response);
 			break;
 		case "/homesearch":
+			System.out.println("home");
 			ArrayList<Items> itmlist = mgr.searchItemsByTitle(request.getParameter("title"));
 			request.setAttribute("itmlist", itmlist);
 			System.out.println(request.getParameter("title"));
 			rd = request.getRequestDispatcher("../jsp/HomeSearch.jsp");
-			rd.forward(request, response);	
+			rd.forward(request, response);
 			break;
 		
 		case "/maintainsearch":
@@ -89,7 +93,9 @@ public class ItemsController extends HttpServlet {
 			break;			
 			
 		case "/searchresult":	
-			
+			System.out.println("go");
+			session=request.getSession();
+			session.setAttribute("searchinput", request.getParameter("title"));
 			String t = request.getParameter("title"); 
 			int id = Integer.parseInt(request.getParameter("itemtypeID"));
 			String s = request.getParameter("itemstatus");	
@@ -152,7 +158,7 @@ public class ItemsController extends HttpServlet {
 		case "/edit":
 			itm = mgr.getOneItems(Integer.parseInt(request.getParameter("itemNumber")));
 			System.out.println(itm.getAuthor());
-			HttpSession session = request.getSession();
+			session = request.getSession();
 			session.setAttribute("itmobj", itm);
 			rd = request.getRequestDispatcher("../jsp/ItemDetail.jsp");
 			rd.forward(request, response);	
@@ -185,7 +191,8 @@ public class ItemsController extends HttpServlet {
 			itm.setItemstatus(request.getParameter("itemstatus"));			
 			result = mgr.createItems(itm);			
 			System.out.println(result);	
-			break;		
+			break;
+		
 	
 		default:
 			break;
