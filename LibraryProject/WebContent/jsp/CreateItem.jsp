@@ -72,12 +72,8 @@
      		</select>
      		</td>		  	
         </tr>
-        <tr>
-        	<td align="right">
-        		<input type="submit" value="Create">
-        	</td>        		      	
-        </tr>
-      </table>      
+      </table>
+      		<input type="submit" value="Create">          
       <c:if test="${istitlenull == true}"><br>
       	<label class="errorlabe">Title can not be empty</label>
       </c:if>

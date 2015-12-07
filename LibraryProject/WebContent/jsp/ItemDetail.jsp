@@ -68,7 +68,7 @@
         	</td>
         </tr>
         <tr>
-        	<td>Isbn</td>
+        	<td>ISBN</td>
         	<td>
         		<input type="hidden" value="${itmobj.isbn}" name="isbn">
         		${itmobj.isbn}
@@ -126,6 +126,7 @@
       </table>
       <button type="submit" >Confirm</button>
       </form>
+      <form action="../jsp/MaintainItem.jsp" method="post"><button type="submit">Cancel</button></form>
 	</div>
   </div>
   <div class="footer">

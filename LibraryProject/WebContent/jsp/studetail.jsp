@@ -51,21 +51,13 @@
          
         <tr>
             <td>role type</td>
-            
-            <td>
+			<td>
             <c:choose>
             	<c:when test='${stu.role=="student"}'>
             	<select name="roletype" >
-            	<option value="librarian" >librarian</option>
             	<option value="student" selected>student</option>
             	</select>
-            	</c:when>
-            	<c:when test='${stu.role=="librarian"}'>
-            	<select name="roletype" >
-            	<option value="librarian" selected>librarian</option>
-            	<option value="student" >student</option>
-            	</select>
-            	</c:when>
+            	</c:when>            	
             </c:choose>	
             </td>
         </tr>
