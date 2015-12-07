@@ -231,7 +231,7 @@ public class ItemsController extends HttpServlet {
 				result = mgr.createItems(itm);
 				System.out.println(result);				
 				rd = request.getRequestDispatcher("../jsp/libsearch.jsp");
-				rd.include(request, response);
+				rd.forward(request, response);
 				
 			} else {
 				request.setAttribute("istitlenull", istitlenull);
