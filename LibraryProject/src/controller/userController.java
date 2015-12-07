@@ -122,6 +122,7 @@ public class userController extends HttpServlet {
 				}
 				
 			}
+			break;
 		case "/logout":
 			
 			session.invalidate();
@@ -131,14 +132,23 @@ public class userController extends HttpServlet {
 			rd.forward(request, response);
 			
 		case "/maintainstudent":
-
-			stulist = (ArrayList<User>) usermgr.getStudents();
-			request.setAttribute("stulist", stulist);
-			rd = request.getRequestDispatcher("../jsp/maintainstudent.jsp");
-			rd.forward(request, response);
+			
+			System.out.println(checkLoginLib(request.getSession()));
+			if(checkLoginLib(request.getSession())){
+				
+				stulist = (ArrayList<User>) usermgr.getStudents();
+				request.setAttribute("stulist", stulist);
+				rd = request.getRequestDispatcher("../jsp/maintainstudent.jsp");
+				rd.forward(request, response);
+				}else{
+					session.invalidate();
+					rd=request.getRequestDispatcher("../jsp/login.jsp");
+					rd.forward(request, response);
+			}
 			break;
 			
 		case "/showStuById":
+			if(checkLoginLib(request.getSession())){	
 			stulist= new ArrayList<User>();
 			if(request.getParameter("userid")==""){
 				stulist = (ArrayList<User>) usermgr.getStudents();
@@ -165,9 +175,15 @@ public class userController extends HttpServlet {
 				}
 				
 			}
-			
+			}else{
+				session.invalidate();
+				rd=request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			}
+			break;
 			
 		case "/studetail":
+			if(checkLoginLib(request.getSession())){
 			String uid = request.getParameter("userid");
 			System.out.println(request.getParameter("userid"));
 			User stu = usermgr.getOneUser(uid);
@@ -176,8 +192,14 @@ public class userController extends HttpServlet {
 			/*request.setAttribute("stu", stu);*/
 			rd = request.getRequestDispatcher("../jsp/studetail.jsp");
 			rd.forward(request,response);
+			}else{
+				session.invalidate();
+				rd=request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			}
 			
 		case "/updatestudent":
+			if(checkLoginLib(request.getSession())){
 
 			if(request.getParameter("phone").equals("")){
 					isphonecorrect=true;
@@ -237,13 +259,15 @@ public class userController extends HttpServlet {
 				rd.forward(request, response);
 				
 			}
-			
-			
-			
-			
+			}else{
+				session.invalidate();
+				rd=request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			}
+
 			
 		case "/createstudent":
-			
+			if(checkLoginLib(request.getSession())){
 			if(request.getParameter("studentid").length()!=8){
 				isidright = false;
 			}else{
@@ -339,10 +363,37 @@ public class userController extends HttpServlet {
 				rd.forward(request, response);
 				
 			}
-				
+			}else{
+				session.invalidate();
+				rd=request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			}
 					
 				
-		}	
+		}
+		
+	}
+	protected boolean checkLoginStu(HttpSession session){
+		User loguser=(User)session.getAttribute("loginuser");
+		try{
+		if(loguser.getRole().equals("student"))
+			return true;
+		else
+			return false;
+		}
+		catch(Exception exception){return false;}
+	}
+	protected boolean checkLoginLib(HttpSession session){
+		User loguser=(User)session.getAttribute("loginuser");
+		
+		try{
+			if(loguser.getRole().equals("librarian"))
+				return true;
+			
+			else
+				return false;
+			}
+			catch(Exception exception){return false;}
 	}
 }
 

@@ -26,7 +26,7 @@
     <ul class="nav">
      <li><a href="http://localhost:8080/library/jsp/libsearch.jsp">Search Item</a></li>
       <li><a href="../jsp/librariantransaction.jsp">Transaction History</a></li>
-      <li><a href="../jsp/libreturn">Return Item</a></li>
+      <li><a href="../jsp/libreturn.jsp">Return Item</a></li>
       <li><a href="http://localhost:8080/library/jsp/MaintainItem.jsp">Maintain Item</a>
       <li><a href="/library/user/maintainstudent">Maintain Student</a></li>
     </ul>
@@ -71,7 +71,7 @@
     <label>${user.userId} : ${user.userName}   ${user.onloanNumber}items on loan</label>
     <label style="color:red;">              ${message}</label>
    <form class="searchbar"  action="/library/transaction/libborrow" method="post">
-   <div style="height:740px;">
+   <div style="height:650px;">
   	<label>Search Result</label>
   	<table class="stable">
     	<tr>
@@ -133,7 +133,7 @@
         </c:forEach> 
     </table>
     </div>
-      <label style="color:red;"> ${message}</label>
+      
     <label> Input student ID: <input type="text" name="sdutentID" > </label>
     <button type="submit" >Borrow</button>
     </form>
