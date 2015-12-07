@@ -70,14 +70,20 @@ public class ItemsController extends HttpServlet {
 			System.out.println(request.getParameter("itemstatus"));
 			
 			if(i.length() !=0 && sts.equals("-1")){
-				itm = mgr.getOneItems(Integer.parseInt(request.getParameter("itemNumber")));
-				HttpSession session = request.getSession();
-				session.setAttribute("itmobj", itm);
-				rd = request.getRequestDispatcher("../jsp/ItemDetail.jsp");
+				try{
+					itm = mgr.getOneItems(Integer.parseInt(request.getParameter("itemNumber")));
+					HttpSession session = request.getSession();
+					session.setAttribute("itmobj", itm);
+					rd = request.getRequestDispatcher("../jsp/ItemDetail.jsp");
+				}catch(Exception e){
+					System.out.println("Incorrect!");
+					boolean isNumber = false;
+					request.setAttribute("isNumber", isNumber);
+					rd = request.getRequestDispatcher("../jsp/MaintainItem.jsp");
+				}				
 				rd.forward(request, response);
 				break;
 			}
-			
 			ArrayList<Items> list1 = null;
 			if(i.length()== 0 && sts.equals("-1")){
 				System.out.println("here..");
@@ -89,6 +95,7 @@ public class ItemsController extends HttpServlet {
 				list1 = mgr.searchItembyStatusItemNumber(request.getParameter("itemstatus"), 
 						Integer.parseInt(request.getParameter("itemNumber")));
 			}
+			
 			request.setAttribute("itmlist", list1);
 			rd = request.getRequestDispatcher("../jsp/MaintainItem.jsp");
 			rd.forward(request, response);
@@ -145,7 +152,6 @@ public class ItemsController extends HttpServlet {
 				System.out.println(u.getUserId().substring(0, 1));
 				String role = u.getUserId().substring(0, 1);
 				if(role.equals("S")){
-					System.out.println("i m here.");
 					rd = request.getRequestDispatcher("../jsp/stusearch.jsp");
 				}else if(role.equals("L")){
 					rd = request.getRequestDispatcher("../jsp/libsearch.jsp");
@@ -193,8 +199,8 @@ public class ItemsController extends HttpServlet {
 			}
 			if(request.getParameter("author").equals("")){
 				isauthornull = true;
-			}
-			
+			}			
+
 			if(request.getParameter("year").length() != 0){
 				if(request.getParameter("year").length() == 4){
 					try{
