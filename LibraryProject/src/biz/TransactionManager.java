@@ -3,6 +3,7 @@ package biz;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import dao.DAOFactory;
 import dao.TransactionDao;
 import dao.tfactory;
 import dto.Transcation;
@@ -10,7 +11,7 @@ import dto.Transcation;
 public class TransactionManager {
 	public TransactionManager() {		
 	}
-	tfactory f =new tfactory();
+	DAOFactory f =new DAOFactory();
 	TransactionDao transactionDao=f.geTransactionDao();
 	public ArrayList<Transcation> findAllTranscation()throws Exception{
 		return transactionDao.findAllTranscation();
@@ -28,8 +29,8 @@ public class TransactionManager {
 		return transactionDao.findTransactionByTime(from, to);
 	}
 	
-	public int updateTransaction(Transcation t)throws Exception{
-		return transactionDao.updateTransaction(t);
+	public int updateTransaction(Transcation transaction)throws Exception{
+		return transactionDao.updateTransaction(transaction);
 	}
 	
 	public int insertTransaction(Transcation t)throws Exception{
@@ -38,6 +39,30 @@ public class TransactionManager {
 	
 	public int overdueTransaction(int transsationID)throws Exception{
 		return transactionDao.overdueTransaction(transsationID);
+	}
+	
+	public ArrayList<Transcation> findTransactionByCondition(int itemType, int satus, Date from, Date to)throws Exception{
+		return transactionDao.findTransactionByCondition(itemType, satus, from, to);
+	}
+	
+	public ArrayList<Transcation> findTransactionByUserIDandStatus(String userID, String status)throws Exception{
+		return transactionDao.findTransactionByUserIDandStatus(userID, status);
+	}
+	
+	public ArrayList<Transcation> findTransactionByUserIDandNOTStatus(String userID,String status) throws Exception{
+		return transactionDao.findTransactionByUserIDandNOTStatus(userID, status);
+	}
+	
+	public Transcation findTransactionByID(int transactionID) throws Exception{
+		return transactionDao.findTransactionByID(transactionID); 		
+	} 
+	
+	public ArrayList<Transcation> findTransactionByTimeandUerID(String uerID,Date from,Date to) throws Exception{
+		return transactionDao.findTransactionByTimeandUerID(uerID, from, to);
+	}
+	
+	public int renewTransaction(Transcation t) throws Exception {
+		return transactionDao.renewTransaction(t);
 	}
 	
 }

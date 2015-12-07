@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="../css/loginstyle.css" type="text/css">
-<title>Student Detail</title>
+<title>New Student</title>
 </head>
 
 <body>
@@ -20,20 +20,46 @@
   	<div class="homesearchbar">
     <form>
       <label>Student Detail</label>
-      <input  type="hidden" value=${userid} name="userid">
-      <table class="stable">
+     	<input type="hidden" value="current date" name="">
+        <input type="hidden" value="0" name="onloan">
+      <table class="stable" style="text-align:left">
         <tr>
             <td>Student ID</td>
-            <td>${item.id}</td>
+            <td><input type="text" name="studentid"></td>
         </tr>
         <tr>
             <td>Student name</td>
             <td><input type="text" name="studentname"></td>
         </tr>
-        
+         <tr>
+            <td>password</td>
+            <td><input type="password" name="password"></td>
+        </tr>
         <tr>
-            <td>ContactNumber</td>
-            <td><input type="text" name="contactnumber"></td>
+            <td>confirm password</td>
+            <td><input type="text" name="confirmpassword"></td>
+        </tr>
+         <tr>
+            <td>role type</td>
+            <td>
+            	<select name="roletype" >
+            	<option value="librarian" disabled="disabled">librarian</option>
+            	<option value="student" selected>student</option>
+            	</select>
+            </td>
+        </tr>
+         <tr>
+            <td>Date of Birth</td>
+            <td><input type="Date" name="dateofbirth"></td>
+        </tr>
+         
+        <tr>
+            <td>Email</td>
+            <td><input type="text" name="email"></td>
+        </tr>
+         <tr>
+            <td>Contact Number</td>
+            <td><input type="text" name="phone"></td>
         </tr>
         
         <tr>
@@ -43,14 +69,10 @@
         
         <tr>
             <td>status</td>
-            <td><select name="status">
-            <option value="1" >active</option>
+            <td><select name="status" disabled="disabled">
+            <option value="1" selected>active</option>
             <option value="0">unactive</option>
             </select></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><a href="#">Change</a></td>
         </tr>
      
       </table>
