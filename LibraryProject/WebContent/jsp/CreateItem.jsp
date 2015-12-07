@@ -10,33 +10,40 @@
 </head>
 <body>
 <div class="container" >
- 	<div class="header">
- 		<img src="../img/BigLogo.png" alt="Insert Logo Here" name="Insert_logo" width="180" height="90" id="Insert_logo" style="background-color: lightgrey; float:left" />
-   	<div style="clear:both; height:10px;"></div>
+ <div class="header">
+ <img src="../img/BigLogo.png" alt="Insert Logo Here" name="Insert_logo" width="180" height="90" id="Insert_logo" style="background-color: lightgrey; float:left" />
+ <c:choose>
+ <c:when test="${loginuser.userId==null}"><a href="../jsp/login.jsp" style="float:right; ">Log In</a></c:when>
+ <c:when test="${loginuser.userId!=null }"><a href="/library/user/logout" style="float:right; ">Log out</a>
+ <label style="float:right;">Welcome:${loginuser.userName}|</label>
+ </c:when>
+ </c:choose>
+<div style="clear:both; height:10px;"></div>
     <!-- end .header --></div>
   
   <div style="clear:both; height:10px;"></div>
   <div id="mainview" style="height:1000px; background:white;">
-  	<div class="homesearchbar">  	
+  	<div class="homesearchbar">
+  	<a href="http://localhost:8080/library/jsp/MaintainItem.jsp" style="float:right; ">back</a>  	
     <form action="/library/items/add" method="post">      
       <label>New Item</label>            
-      <table style="text-align:left">
+      <table style="text-align:left width=100%">
         <tr >
             <td >Title</td>
             <td >
-            	<input type="text" name="title" style="width:100%"/>
+            	<input type="text" name="title" style="width:300px"/>
             </td>
         </tr>        
         <tr >
             <td >Author</td>
             <td >
-            	<input type="text" name="author" style="width:100%"/>
+            	<input type="text" name="author" style="width:300px"/>
             </td>
         </tr>
         <tr >
             <td >Publisher</td>
             <td>
-            	<input type="text" name="publisher" style="width:100%"/>
+            	<input type="text" name="publisher" style="width:300px"/>
             </td>
         </tr>
         <tr>
@@ -45,7 +52,7 @@
      	</tr>
      	<tr>
      	<td>Description</td>
-		<td><input type="text" name="description" ></td>
+		<td><input type="text" name="description" style="width:300px"></td>
 		</tr>
 		<tr>
 		<td>ISBN</td>
@@ -87,8 +94,7 @@
       <c:if test="${isphonecorrect == false}"><br>
       	<label class="errorlabe">Phone No must be 8 digit.</label>
       </c:if>      
-      </form>
-      <form action="../jsp/libsearch.jsp" method="post"><button type="submit">Cancel</button></form>
+      </form>      
 	</div>
   </div>
   <div class="footer">

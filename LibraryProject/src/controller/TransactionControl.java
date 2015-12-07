@@ -119,8 +119,15 @@ public class TransactionControl extends HttpServlet {
 			}
 			break;
 		case"/returnlib":
+			boolean isStudentNull = false;
 			if(checkLoginLib(request.getSession())){
-			String userID=request.getParameter("studentid");			
+			String userID=request.getParameter("studentid");
+			if(userID.length() == 0){
+				isStudentNull = true;
+				request.setAttribute("isStudentNull", isStudentNull);
+				rd = request.getRequestDispatcher("../jsp/libreturn.jsp");
+				rd.forward(request, response);
+			}else{
 			try{
 				ArrayList<Transcation> list=TM.findTransactionByUserIDandNOTStatus(userID, "0");
 	
@@ -133,8 +140,9 @@ public class TransactionControl extends HttpServlet {
 				rd.forward(request, response);
 			}
 			catch (Exception e) {
-				// TODO: handle exception
-			}}
+				// TODO: handle exception				
+			}}}
+			
 			else{
 				session.invalidate();
 				rd=request.getRequestDispatcher("../jsp/login.jsp");

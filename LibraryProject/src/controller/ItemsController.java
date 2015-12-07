@@ -74,6 +74,8 @@ public class ItemsController extends HttpServlet {
 		
 		case "/maintainsearch":
 			
+			if(checkLoginLib(request.getSession())){
+				
 			String i = request.getParameter("itemNumber");
 			String sts = request.getParameter("itemstatus");	
 			
@@ -87,7 +89,6 @@ public class ItemsController extends HttpServlet {
 					session1.setAttribute("itmobj", itm);
 					rd = request.getRequestDispatcher("../jsp/ItemDetail.jsp");
 				}catch(Exception e){
-					System.out.println("Incorrect!");
 					boolean isNumber = false;
 					request.setAttribute("isNumber", isNumber);
 					rd = request.getRequestDispatcher("../jsp/MaintainItem.jsp");
@@ -110,6 +111,12 @@ public class ItemsController extends HttpServlet {
 			request.setAttribute("itmlist", list1);
 			rd = request.getRequestDispatcher("../jsp/MaintainItem.jsp");
 			rd.forward(request, response);
+			}else{
+				session.invalidate();
+				rd=request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			
+			}
 			break;
 
 		case "/searchresult":	
@@ -178,8 +185,6 @@ public class ItemsController extends HttpServlet {
 		case "/edit":
 			itm = mgr.getOneItems(Integer.parseInt(request.getParameter("itemNumber")));
 			System.out.println(itm.getAuthor());
-			//HttpSession session = request.getSession();
-			//session.setAttribute("itmobj", itm);
 			
 			request.setAttribute("itmobj", itm);
 			rd = request.getRequestDispatcher("../jsp/ItemDetail.jsp");
@@ -205,6 +210,7 @@ public class ItemsController extends HttpServlet {
 			
 			
 		case "/add":
+			if(checkLoginLib(request.getSession())){
 			boolean isauthornull = false;
 			boolean isyearcorrect = false;
 
@@ -248,8 +254,14 @@ public class ItemsController extends HttpServlet {
 				rd = request.getRequestDispatcher("../jsp/CreateItem.jsp");
 				rd.forward(request, response);				
 			
-			}		
-	
+			}	
+			}else{
+				session.invalidate();
+				rd = request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			}
+			break;
+			
 		default:
 			break;
 		}
@@ -264,7 +276,7 @@ public class ItemsController extends HttpServlet {
 	protected boolean checkLoginStu(HttpSession session){
 		User loguser=(User)session.getAttribute("loginuser");
 		try{
-		if(loguser.getRole()=="student")
+		if(loguser.getRole().equals("student"))
 			return true;
 		else
 			return false;
@@ -274,7 +286,7 @@ public class ItemsController extends HttpServlet {
 	protected boolean checkLoginLib(HttpSession session){
 		User loguser=(User)session.getAttribute("loginuser");
 		try{
-			if(loguser.getRole()=="librarian")
+			if(loguser.getRole().equals("librarian"))
 				return true;
 			else
 				return false;

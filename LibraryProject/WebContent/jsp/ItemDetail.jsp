@@ -19,13 +19,14 @@
  	<a href="/library/user/logout" style="float:right; ">Log out</a>
  	<label style="float:right;">Welcome:${loginuser.userName}|</label>
  	</c:when>
- </c:choose>
+ </c:choose> 
    <div style="clear:both; height:10px;"></div>
     <!-- end .header --></div>
   
   <div style="clear:both; height:10px;"></div>
   <div id="mainview" style="height:1000px; background:white;">
   	<div class="homesearchbar">
+  	<a href="http://localhost:8080/library/jsp/MaintainItem.jsp" style="float:right; ">back</a>
     <form action="/library/items/update" method="post">
       <label>Item Detail</label>
       <input type="hidden" value="${itmobj.itemNumber}" name="itemNumber">
