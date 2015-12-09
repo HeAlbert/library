@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -36,11 +37,11 @@
  <div style="margin:10px;">
  	<form class="searchbar" action="/library/transaction/returnlib" method="post">
     	<label >Student ID</label>
-        <input type="text" name="studentid"  />
+        <input type="text" name="studentid"  value=${stuid}>
         <button type="submit">Search</button>
     </form>
    <div style="height:740px;">
-  
+  <c:if test="${isusercorrect==false}" ><label class="errorlabe">The User ID not correct</label></c:if>
         <table  class="stable" >
         <caption class="scaptain">Onloan Item</caption>
         	<tr>

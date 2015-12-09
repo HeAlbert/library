@@ -3,10 +3,7 @@ package dao;
 import java.sql.Date;
 import java.util.ArrayList;
 
-import org.apache.taglibs.standard.lang.jstl.test.beans.PublicInterface2;
-
 import dto.Transcation;
-import dto.dto;
 
 public interface TransactionDao {
 	public ArrayList<Transcation> findAllTranscation()throws Exception;

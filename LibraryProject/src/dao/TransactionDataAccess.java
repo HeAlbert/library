@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import org.apache.catalina.tribes.group.interceptors.StaticMembershipInterceptor;
-
 import com.mysql.jdbc.Statement;
 
 import dto.Transcation;
@@ -336,6 +334,9 @@ public class TransactionDataAccess implements TransactionDao {
 	}
 	@Override
 	public int renewTransaction(Transcation t) throws Exception {
+		
+		if(t.getStatus().equals("1")){
+			
 		Connection conn=openConnection();
 		Statement stmt=(Statement) conn.createStatement();
 		int i=0;
@@ -353,7 +354,8 @@ public class TransactionDataAccess implements TransactionDao {
 			conn.close();
 			return i;
 		}
-		catch(Exception e){return i;}
+		catch(Exception e){return i;}}
+		return 0;
 	}
 
 }

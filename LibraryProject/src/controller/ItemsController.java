@@ -1,6 +1,5 @@
 package controller;
 
-import java.awt.Checkbox;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -48,6 +47,7 @@ public class ItemsController extends HttpServlet {
 		UserManager UM=new UserManager();
 		User loguser;
 		User user;
+		
 		try{		
 		loguser=(User)session.getAttribute("loginuser");
 		user=UM.getOneUser(loguser.getUserId());
@@ -73,7 +73,8 @@ public class ItemsController extends HttpServlet {
 			break;
 		
 		case "/maintainsearch":
-			
+			if(checkLoginLib(request.getSession())){
+				
 			String i = request.getParameter("itemNumber");
 			String sts = request.getParameter("itemstatus");	
 			
@@ -82,17 +83,30 @@ public class ItemsController extends HttpServlet {
 			
 			if(i.length() !=0 && sts.equals("-1")){
 				try{
+					System.out.println("1");
 					itm = mgr.getOneItems(Integer.parseInt(request.getParameter("itemNumber")));
-					HttpSession session1 = request.getSession();
-					session1.setAttribute("itmobj", itm);
-					rd = request.getRequestDispatcher("../jsp/ItemDetail.jsp");
+					System.out.println(itm.toString());
+					System.out.println(itm.getItemNumber());
+					if(itm.getItemNumber()!=0){
+						HttpSession session1 = request.getSession();
+						session1.setAttribute("itmobj", itm);
+						rd = request.getRequestDispatcher("../jsp/ItemDetail.jsp");
+						rd.forward(request, response);
+					}else{
+						boolean isNumber = false;
+						System.out.println("go here");
+						request.setAttribute("isNumber", isNumber);
+						rd = request.getRequestDispatcher("../jsp/MaintainItem.jsp");
+						rd.forward(request, response);
+					}
+					
 				}catch(Exception e){
 					System.out.println("Incorrect!");
 					boolean isNumber = false;
 					request.setAttribute("isNumber", isNumber);
 					rd = request.getRequestDispatcher("../jsp/MaintainItem.jsp");
+					rd.forward(request, response);
 				}				
-				rd.forward(request, response);
 				break;
 			}
 			ArrayList<Items> list1 = null;
@@ -109,7 +123,12 @@ public class ItemsController extends HttpServlet {
 			
 			request.setAttribute("itmlist", list1);
 			rd = request.getRequestDispatcher("../jsp/MaintainItem.jsp");
-			rd.forward(request, response);
+			rd.forward(request, response);}
+			else{
+				session.invalidate();
+				rd=request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			}
 			break;
 
 		case "/searchresult":	
@@ -176,17 +195,21 @@ public class ItemsController extends HttpServlet {
 			break;
 			
 		case "/edit":
-			itm = mgr.getOneItems(Integer.parseInt(request.getParameter("itemNumber")));
-			System.out.println(itm.getAuthor());
-			//HttpSession session = request.getSession();
-			//session.setAttribute("itmobj", itm);
-			
-			request.setAttribute("itmobj", itm);
-			rd = request.getRequestDispatcher("../jsp/ItemDetail.jsp");
-			rd.forward(request, response);	
+			if(checkLoginLib(request.getSession())){
+				itm = mgr.getOneItems(Integer.parseInt(request.getParameter("itemNumber")));
+				request.setAttribute("itmobj", itm);
+				rd = request.getRequestDispatcher("../jsp/ItemDetail.jsp");
+				rd.forward(request, response);	
+			}else{
+				session.invalidate();
+				rd=request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			}
 			break;
 			
 		case "/update":
+			if(checkLoginLib(request.getSession())){
+				
 			
 			itm = new Items();
 			itm.setItemNumber(Integer.parseInt(request.getParameter("itemNumber")));			
@@ -201,10 +224,16 @@ public class ItemsController extends HttpServlet {
 			result = mgr.updateItems(itm);
 			rd = request.getRequestDispatcher("../jsp/MaintainItem.jsp");
 			rd.forward(request, response);
+			}else{
+				session.invalidate();
+				rd=request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			}
 			break;
 			
 			
 		case "/add":
+			if(checkLoginLib(request.getSession())){
 			boolean isauthornull = false;
 			boolean isyearcorrect = false;
 
@@ -216,23 +245,28 @@ public class ItemsController extends HttpServlet {
 			}
 			
 			if(request.getParameter("year").length() != 0){
-				if(request.getParameter("year").length() == 4){
 					try{
 						Integer.parseInt(request.getParameter("year"));
 						isyearcorrect = true;
 					}catch(Exception e){
 						isyearcorrect = false;
 					}
-				}
+			}else{
+				isyearcorrect = true;
 			}
+			System.out.println(1);
 			itm = new Items();
-			if (!istitlenull && !isauthornull) {
-				// itm.setItemNumber(request.getParameter("itemnumber"));
+			System.out.println(!istitlenull && !isauthornull&&isyearcorrect);
+			if (!istitlenull && !isauthornull&&isyearcorrect) {
+				System.out.println(2);
 				itm.setTitle(request.getParameter("title"));
 				itm.setAuthor(request.getParameter("author"));
+				
 				itm.setPublisher(request.getParameter("publisher"));
+				System.out.println(2);
 				itm.setYear(request.getParameter("year"));
 				itm.setDescription(request.getParameter("description"));
+				System.out.println(3);
 				itm.setIsbn(request.getParameter("isbn"));
 				itm.setItemtypeID(Integer.parseInt(request.getParameter("itemtypeID")));
 				itm.setItemstatus(request.getParameter("itemstatus"));
@@ -241,17 +275,27 @@ public class ItemsController extends HttpServlet {
 				rd = request.getRequestDispatcher("../jsp/libsearch.jsp");
 				rd.forward(request, response);
 				
-			} else {
+				} else {
+					System.out.println(3);
 				request.setAttribute("istitlenull", istitlenull);
 				request.setAttribute("isauthornull", isauthornull);
 				request.setAttribute("isyearcorrect", isyearcorrect);
+				System.out.println(4);
 				rd = request.getRequestDispatcher("../jsp/CreateItem.jsp");
+				System.out.println(5);
 				rd.forward(request, response);				
 			
-			}		
+			}
+			
+			}else{
+				session.invalidate();
+				rd=request.getRequestDispatcher("../jsp/login.jsp");
+				rd.forward(request, response);
+			}
+			break;
 	
 		default:
-			break;
+			throw new ServletException("404");
 		}
 	}
 
